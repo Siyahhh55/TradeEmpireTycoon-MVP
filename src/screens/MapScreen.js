@@ -1,28 +1,53 @@
 // src/screens/MapScreen.js
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Dimensions } from 'react-native';
+import MapView, { Marker } from 'react-native-maps';
 import Header from '../components/Header';
+import { PORTS } from '../constants';
+import { useGameStore } from '../store/useGameStore';
+
+const { width, height } = Dimensions.get('window');
 
 export default function MapScreen({ navigation }) {
+  const setCurrentPort = useGameStore(state => state.setCurrentPort);
+
+  const handlePortPress = (port) => {
+    setCurrentPort(port.id);
+    navigation.navigate('Port', { port });
+  };
+
   return (
     <View style={styles.container}>
       <Header />
-      <View style={styles.body}>
-        <Text style={styles.welcome}>Hoş geldin kanka!</Text>
-        <Text style={styles.info}>Dünya haritası yarın burada olacak!</Text>
-        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Port')}>
-          <Text style={styles.buttonText}>İstanbul Limanı →</Text>
-        </TouchableOpacity>
-      </View>
+      <MapView
+        style={styles.map}
+        initialRegion={{
+          latitude: 30,
+          longitude: 30,
+          latitudeDelta: 80,
+          longitudeDelta: 80,
+        }}
+      >
+        {PORTS.map((port) => (
+          <Marker
+            key={port.id}
+            coordinate={{ latitude: port.coords[0], longitude: port.coords[1] }}
+            title={port.name}
+            onPress={() => handlePortPress(port)}
+          >
+            <View style={styles.marker}>
+              <Text style={styles.markerText}>{port.name[0]}</Text>
+            </View>
+          </Marker>
+        ))}
+      </MapView>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#0f172a' },
-  body: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20 },
-  welcome: { fontSize: 28, fontWeight: 'bold', color: '#e2e8f0', marginBottom: 20 },
-  info: { fontSize: 16, color: '#94a3b8', textAlign: 'center', marginBottom: 40 },
-  button: { backgroundColor: '#3b82f6', paddingVertical: 16, paddingHorizontal: 32, borderRadius: 12 },
-  buttonText: { color: 'white', fontSize: 18, fontWeight: 'bold' }
+  map: { width, height: height - 100 },
+  marker: { backgroundColor: '#3b82f6', padding: 8, borderRadius: 20, borderWidth: 2, borderColor: '#60a5fa' },
+  markerText: { color: 'white', fontWeight: 'bold', fontSize: 12 },
 });

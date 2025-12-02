@@ -3,7 +3,7 @@
     "name": "TradeEmpireTycoon-MVP",
     "slug": "TradeEmpireTycoon-MVP",
     "version": "1.0.0",
-    "main": "src/App.js",
+    "main": "index.js",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",

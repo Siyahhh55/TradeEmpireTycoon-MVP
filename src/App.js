@@ -12,7 +12,7 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Map" component={MapScreen} />
-        <Stack.Screen name="Port" component={PortScreen} />
+        <Stack.Screen name="Port" component={PortScreen} options={{ headerShown: false }} />
       </Stack.Navigator>
     </NavigationContainer>
   );
